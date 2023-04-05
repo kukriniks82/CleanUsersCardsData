@@ -698,7 +698,7 @@ namespace CleanUsersCardsData
         public  class Config : SeverConfig
         {
 
-            static string configFileName = Path.Join(AppContext.BaseDirectory, "Config.json");
+            static string configFileName = Path.Join(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Config.json");
 
             public static SeverConfig GetConfig()            {
                 string conf = @"{
@@ -741,9 +741,10 @@ namespace CleanUsersCardsData
         public static void Log(string text)
         {
             DateTime now = DateTime.Now;
+            string logFileName = now.ToString("dd.MM.yyyy");
+            string FileLog = "LOG_" + logFileName + ".txt";
 
-            string LogFileName = Path.Join(AppContext.BaseDirectory, $"LOG_{now.ToString("d")}.txt");
-            using (StreamWriter sw = File.AppendText(LogFileName))
+            using (StreamWriter sw = File.AppendText(FileLog))
             {
                 sw.WriteLine($"{now:G}: {text}");
             }
@@ -752,9 +753,9 @@ namespace CleanUsersCardsData
         public static void Data(List<string> dataName, string DataFileName)
         {
             DateTime now = DateTime.Now;
-
-            string LogFileName = Path.Join(AppContext.BaseDirectory, $"{now.ToString("d")}_{DataFileName}.txt");
-            using (StreamWriter sw = File.AppendText(LogFileName))
+            string lofFileName = $"{now.ToString("dd.MM.yyyy")}_{DataFileName}.txt";
+   
+            using (StreamWriter sw = File.AppendText(lofFileName))
             {
                 foreach (var item in dataName)
                 {
@@ -764,23 +765,6 @@ namespace CleanUsersCardsData
             }
         }
 
-
-
-        public static void LogByUser(User user, string newValue, string username)
-        {
-            using (StreamWriter sw = File.AppendText(username))
-            {
-                sw.WriteLine($"{user.FirstName}| {user.ID} |{user.SIDs.values}");
-                sw.WriteLine("Berfor");
-
-                foreach (var item in user.EMails.values)
-                {                    
-                    sw.WriteLine($"{item}");
-                }
-                sw.WriteLine("After");
-                sw.WriteLine(newValue);
-            }
-        }
     }
 
 }
